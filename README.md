@@ -2,6 +2,7 @@
 If you want the local version, follow these steps.
 
 - Install Jekyll.
+- **Remove `Gemfile` from the directory, or rename it**.
 - At the base of the repository:
 
 		jekyll build
