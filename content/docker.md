@@ -76,7 +76,7 @@ If your image has several tags, removing the image will remove all of its tagged
 	docker rm `docker ps -a -q`
 
 ## Retag an image
-- Case 1: your image has no tag (no `-t` option given at build).
+- Case 1: your image has no tag (no `--tag` option given at build).
 
 		docker tag image_id tag
 
@@ -116,7 +116,7 @@ Nothing seems to happen, but a `docker ps -a` will show that the container is no
 
 	docker exec -ti container_id /bin/bash
 
-Note that exiting the console in this case **will not** stop the container. We'll have to that manually:
+Note that exiting the console in this case **will not stop** the container. We'll have to that manually:
 
 	docker stop container_id
 
