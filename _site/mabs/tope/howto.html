@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="/styles.css">
+
+		<script>
+		MathJax = {
+			loader: {
+				load: [
+				'input/tex-base', '[tex]/newcommand', '[tex]/action',
+				'output/chtml'
+				]
+			},
+			tex: {
+				inlineMath: [['\\(', '\\)']],
+				packages: ['base', 'newcommand', 'action']
+			}
+		};
+		</script>
+
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+		<title></title>
+	</head>
+
+	<body>
+		<div class="sidebar">
+			<h3> <a href="/index.html">Home</a> </h3>
+			
+				<h3> Tope </h3>
+				
+					<li><a href="/mabs/tope/howto.html"style="color: red;">
+						HOWTO
+					</a><br></li>
+				
+					<li><a href="/mabs/tope/documentation.html">
+						Documentation
+					</a><br></li>
+				
+					<li><a href="/mabs/tope/rapport.html">
+						Rapport
+					</a><br></li>
+				
+			
+				<h3> Cross </h3>
+				
+					<li><a href="/mabs/cross/howto.html">
+						HOWTO
+					</a><br></li>
+				
+					<li><a href="/mabs/cross/documentation.html">
+						Documentation
+					</a><br></li>
+				
+					<li><a href="/mabs/cross/rapport.html">
+						Rapport
+					</a><br></li>
+				
+			
+		</div>
+
+		<div class="main">
+			<p class="title">MAbTope - HOWTO</p>
+
+<p>On appelera dossier <em>courant</em> le dossier contenant le présent fichier.</p>
+
+<h1 id="projet">Projet</h1>
+<p>Il y a un unique projet multi-threadé.
+Nécessite <em>g++</em> et <em>libconfig++</em> (le nom du paquet debian est <em>libconfig++-dev</em>).</p>
+
+<h1 id="compilation-et-exécution">Compilation et exécution</h1>
+<h2 id="compilation">Compilation</h2>
+<p>Depuis le dossier <em>1.2/</em>, le projet se compile avec</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scons -j 4
+</code></pre></div></div>
+
+<p>(l’option <em>-j 4</em> dit de compiler quatre fichiers en même temps).
+Cela produit le fichier exécutable <em>docking</em>.</p>
+
+<p>Exécuter</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scons -c
+</code></pre></div></div>
+
+<p>supprimera les fichiers objects et l’exécutable.</p>
+
+<h2 id="execution">Execution</h2>
+<p>L’exécutable prend un unique argument : un fichier de configuration. La section <a href="#le-fichier-de-configuration"><em>Le fichier de configuration</em></a>
+détaille le format et les prérequis du fichier.</p>
+
+<p>Lorsque <em>config.cfg</em> est correct, l’exécutable se lance avec</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>time ./docking config.cfg
+</code></pre></div></div>
+
+<h1 id="le-fichier-de-configuration">Le fichier de configuration</h1>
+<p>Mes fichiers de configuration précédents étaient fait à la main. Je suis passé à un format déjà existant : <em>libconfig</em>.
+En plus d’être plus facilement vérifiable, et donc moins sujet à erreur, il permet aussi de structurer les données.
+<em>vim</em> devrait coloré le fichier correctement si on lui donne l’extension <em>.cfg</em>.</p>
+
+<h2 id="le-format-libconfig">Le format <em>libconfig</em></h2>
+<p>Il y a quatre types de données : primaire, tableau, liste et groupe.</p>
+
+<ul>
+  <li>
+    <p>Primaire : un simple assignement de variable de types <em>int, float, bool, string</em>. Double quote pour les <em>string</em>.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  integer = 2
+  float = 2.2
+  bool = true
+  string = "Je collectionne des canards. Vivants."
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Tableau : entre <em>[]</em>. Les éléments sont de même types et sont séparés par des virgules.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  array = ["Je", "collectionne", "des", "canards.", "Vivants."]
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Liste : entre <em>()</em>. Les éléments peuvent être de types différents et sont séparés par des virgules.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  list = ("Je", "possède", 2, "canards.", "Vivants.")
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Groupe : entre <em>{}</em>. Un assignement de n’importe quel type par ligne.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  group = {
+      integer = 2
+      float = 2.2
+      bool = true
+      string = "Je collectionne des canards. Vivants."
+
+      array = ["Je", "collectionne", "des", "canards.", "Vivants."]
+
+      liste = ("Je", "possède", 2, "canards.", "Vivants.")
+
+      innerGroup = {
+          string = "Attention. Un groupe peut en cacher un autre."
+      }
+  }
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Les tableaux et listes peuvent aussi contenir des tableaux, des listes, ou des groupes.</p>
+
+<p>Il est possible d’appeler d’autres fichiers au format <em>libconfig</em> à l’aide de la commande</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@include "fichier.cfg"
+</code></pre></div></div>
+
+<p>La commande se comporte comme si le contenu du fichier <em>fichier.cfg</em> était copié à la place de la commande <em>@include</em>.</p>
+
+<h2 id="le-fichier-configcfg">Le fichier <em>config.cfg</em></h2>
+<p>Les deux listes principales sont <em>docks</em> et <em>posts</em>. La liste <em>docks</em> concerne les options de <em>hex</em> et des calculs de paramètres.
+La liste <em>posts</em> concerne les références.</p>
+
+<h3 id="docks"><em>docks</em></h3>
+<p>Le groupe <em>default</em> est là pour préciser les options par défaut des éléments de <em>docks</em>. Toutes les options présentes dans <em>default</em>
+sont obligatoires pour <em>default</em> lui-même, mais seul <em>name</em> est obligatoire pour les éléments de <em>docks</em>. Voir la section
+<a href="#organisation-des-fichiers-dentrées"><em>Organisation des fichiers d’entrées</em></a> pour plus de détail sur la variable <em>name</em>.</p>
+
+<p>Le groupe <em>default</em> contient le groupe <em>mac</em>, constitué de l’unique ligne</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@include "hex.cfg"
+</code></pre></div></div>
+
+<p>Le fichier <em>hex.cfg</em> contient toutes les options passées à <em>hex</em> précédemment contenues dans les fichiers <em>set_parameters_global.mac</em> et <em>wobble_ligand.mac</em>.
+Les options de <em>hex.cfg</em> se comportent comme toutes les autres options de <em>default</em>, c’est à dire qu’on peut les écraser dans les éléments de <em>docks</em>. Il faudra
+cependant les mettre à l’intérieur du groupe <em>mac</em> pour chaque élément de <em>docks</em>.</p>
+
+<p><em>hex</em> se sert parfois de commande autonome (par exemple <em>commit_edits</em>), ce dont <em>libconfig</em> n’est pas capable. Ces commandes autonomes
+sont écrites dans les <em>.cfg</em> sous forme de variables booléenes. Les mettre à <em>false</em> revient à commenter ou supprimer la ligne.</p>
+
+<h3 id="posts"><em>posts</em></h3>
+<p>Le premier élément de la <em>posts</em> doit être l’approche générique, et son <em>identifier</em> doit absolument être <em>generic</em>.
+Tous les membres des éléments de <em>posts</em> sont obligatoires. En théorie, tu peux lancer plusieurs spécifiques différents en même temps
+en ajoutant autant d’éléments de que tu veux à <em>posts</em>. Il faut juste que les variables <em>identifier</em> des différents éléments soient deux-à-deux distinctes.</p>
+
+<h1 id="organisation-des-fichiers-dentrées">Organisation des fichiers d’entrées</h1>
+<p>Le dossier assigné à la variable <em>inputDirectory</em> de <em>config.cfg</em> doit contenir :</p>
+
+<ul>
+  <li>le fichier <em>solvent.coor</em>,</li>
+  <li>un dossier par élément de la variable <em>docks</em> de <em>config.cfg</em>.</li>
+</ul>
+
+<p>La variable <em>name</em> de chaque élément de <em>docks</em> désigne le sous-dossier de <em>inputDirectory</em> contenant les données relative à cet élément.
+Ce sous-dossier peut-être organisé de deux manières.</p>
+
+<p>Si on passe par <em>hex</em>, il doit contenir :</p>
+
+<ul>
+  <li>un fichier <em>native.pdb</em> si on veut lancer avec la native,</li>
+  <li>un dossier <em>hex</em> contenant les deux fichiers <em>ligand.pdb</em> et <em>receptor.pdb</em>.</li>
+</ul>
+
+<p>Si on bypass <em>hex</em>, il doit simplement contenir une liste de <em>.pdb</em>.</p>
+
+<p>À noter que si on veut avoir différents éléments de <em>docks</em> avec les même fichiers d’entrées mais différentes options, il faudra créer deux dossiers
+distincts contenant les même fichiers.</p>
+
+<h1 id="organisation-des-fichiers-de-sorties">Organisation des fichiers de sorties</h1>
+<p>À la suite d’une exécution, le dossier <em>inputDirectory</em> contiendra un fichier <em>type_counts.csv</em>, qui correspond à ton <em>global_res.csv</em>.
+Chaque dossier contenant les données d’entrée d’un élément de <em>docks</em> contiendra aussi ces fichiers de sortie, organisés comme suit.</p>
+
+<ul>
+  <li>Si on passe par <em>hex</em>, le dossier <em>hex/</em>, déjà présent au départ, contient maintenant un fichier <em>mac</em> (c’est le fichier qu’on aura donner en entrée de <em>hex</em>),
+  les fichiers <em>log</em>, <em>transform</em> et <em>models.pdb</em> (les sorties de <em>hex</em>), et le fichier <em>energies.csv</em> (il contient, pour chaque modèle, l’energie de la meilleure solution).</li>
+  <li>Un dossier <em>params/</em>, qui est le résultats des calculs de paramètres avant intervention des références (essentiellement la sortie de l’ancien programme).</li>
+  <li>Un dossier <em>interactions/</em>, qui contient les fichiers <em>fnats.csv</em>, <em>irmsds.csv</em>, <em>regions.csv</em>, <em>rmsds.csv</em> et <em>types.csv</em> (ton <em>Counts.csv</em>).</li>
+  <li>
+    <p>Un dossier par élément de <em>posts</em>, le nom du dossier étant donné par la variable <em>identifier</em>. Chacun de ces dossiers contient deux fichiers :</p>
+
+    <ul>
+      <li>les calculs de paramètres (avec influence des références cette fois),</li>
+      <li>un fichier de score au format <em>libconfig</em>, qui contient les numéros de modèle sortie par <em>hex</em> (ou assigné si on bypass <em>hex</em>), les consensus, les C-scores… Tout, en gros.</li>
+    </ul>
+  </li>
+</ul>
+
+
+		</div>
+	</body>
+</html>

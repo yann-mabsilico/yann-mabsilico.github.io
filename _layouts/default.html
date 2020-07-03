@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="/styles.css">
+
+		<script>
+		MathJax = {
+			loader: {
+				load: [
+				'input/tex-base', '[tex]/newcommand', '[tex]/action',
+				'output/chtml'
+				]
+			},
+			tex: {
+				inlineMath: [['\\(', '\\)']],
+				packages: ['base', 'newcommand', 'action']
+			}
+		};
+		</script>
+
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+		<title>{{ page.title }}</title>
+	</head>
+
+	<body>
+		<div class="sidebar">
+			<h3> <a href="{{ site.data.navigation.Home }}">Home</a> </h3>
+			{% for mab in site.data.navigation.mabs %}
+				<h3> {{ mab[0] }} </h3>
+				{% for item in mab[1] %}
+					<li><a href="{{ item[1] }}"{% if page.url == item[1] %}style="color: red;"{% endif %}>
+						{{ item[0] }}
+					</a><br></li>
+				{% endfor %}
+			{% endfor %}
+		</div>
+
+		<div class="main">
+			{{ content }}
+		</div>
+	</body>
+</html>

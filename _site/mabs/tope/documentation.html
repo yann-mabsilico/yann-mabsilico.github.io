@@ -1,0 +1,389 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="/styles.css">
+
+		<script>
+		MathJax = {
+			loader: {
+				load: [
+				'input/tex-base', '[tex]/newcommand', '[tex]/action',
+				'output/chtml'
+				]
+			},
+			tex: {
+				inlineMath: [['\\(', '\\)']],
+				packages: ['base', 'newcommand', 'action']
+			}
+		};
+		</script>
+
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+		<title></title>
+	</head>
+
+	<body>
+		<div class="sidebar">
+			<h3> <a href="/index.html">Home</a> </h3>
+			
+				<h3> Tope </h3>
+				
+					<li><a href="/mabs/tope/howto.html">
+						HOWTO
+					</a><br></li>
+				
+					<li><a href="/mabs/tope/documentation.html"style="color: red;">
+						Documentation
+					</a><br></li>
+				
+					<li><a href="/mabs/tope/rapport.html">
+						Rapport
+					</a><br></li>
+				
+			
+				<h3> Cross </h3>
+				
+					<li><a href="/mabs/cross/howto.html">
+						HOWTO
+					</a><br></li>
+				
+					<li><a href="/mabs/cross/documentation.html">
+						Documentation
+					</a><br></li>
+				
+					<li><a href="/mabs/cross/rapport.html">
+						Rapport
+					</a><br></li>
+				
+			
+		</div>
+
+		<div class="main">
+			<p class="title">MAbTope - Documentation</p>
+
+<h1 id="conventions">Conventions</h1>
+<p>Par convention, chaque fichier <em>.h</em> contient la classe dont le nom est obtenu en prenant le nom
+du fichier (sans le <em>.h</em>), en enlevant les underscores et en mettant des majuscules à chaque début de mot :
+<em>config_data.h</em> contient la classe <em>ConfigData</em>, <em>molecule.h</em> contient la classe <em>Molecule</em>… Le fichier contient
+souvent des classes additionnelles utiles à la définition de la classe principale.
+La plupart des commentaires se trouvent dans les <em>.h</em> et expliquent à quoi les attributs correspondent
+et ce que les fonctions sont sensées faire.</p>
+
+<h1 id="calcul-des-paramètres">Calcul des paramètres</h1>
+<h2 id="molecules">Molecules</h2>
+<h3 id="classes">Classes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Dossier</th>
+      <th style="text-align: center">Fichier</th>
+      <th style="text-align: center">Classes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">params/molecule/</td>
+      <td style="text-align: center">atom.h</td>
+      <td style="text-align: center">Atom</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">params/molecule/</td>
+      <td style="text-align: center">chain.h</td>
+      <td style="text-align: center">Chain</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">params/molecule/</td>
+      <td style="text-align: center">coordinate.h</td>
+      <td style="text-align: center">Coordinate</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">params/molecule/</td>
+      <td style="text-align: center">molecule.h</td>
+      <td style="text-align: center">Molecule</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">params/molecule/</td>
+      <td style="text-align: center">residue.h</td>
+      <td style="text-align: center">Residue</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="description">Description</h3>
+<p>Une molécule est constituée</p>
+<ul>
+  <li>d’une liste de chaînes,</li>
+  <li>d’une liste de résidus,</li>
+  <li>d’une liste d’atomes.</li>
+</ul>
+
+<p>Chaque chaîne a des attributs <em>residueBegin</em> et <em>residueEnd</em> pour identifier les résidus qui la constitue,
+et chaque résidu a des attributs <em>atomBegin</em> et <em>atomEnd</em> pour identifier les atomes qui lui appartienne.</p>
+
+<p>Les classes permettent de stocker tous les attributs donnés par les fichiers <em>.pdb</em>, notamment les noms
+et identifiants des atomes/résidus/chaînes, et les coordonnées des atomes.</p>
+
+<h2 id="triangulation-et-résultats">Triangulation et résultats</h2>
+<h3 id="classes-1">Classes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Dossier</th>
+      <th style="text-align: center">Fichier</th>
+      <th style="text-align: center">Classes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">params/delaunay/</td>
+      <td style="text-align: center">delaunay.h</td>
+      <td style="text-align: center">Delaunay, Info</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">params/delaunay/</td>
+      <td style="text-align: center">graph.h</td>
+      <td style="text-align: center">Graph</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">params/delaunay/</td>
+      <td style="text-align: center">stats.h</td>
+      <td style="text-align: center">Stats</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="triangulation">Triangulation</h3>
+<p>CGAL s’occupe de trianguler. En plus de l’aspect simplement géométrique, c’est-à-dire les coordonnées des points,
+il est possible de donner à CGAL des informations sur les points de la triangulation. Ces informations sont regroupées
+dans la classe <em>Info</em>, et contiennent notamment les identifiants de chaînes et résidus auquel appartienne les points.
+C’est également un bon endroit pour stocker des propriétés relatives aux points, l’accéssibilité au solvant ou à un autre résidu,
+ou même des résultats comme les surfaces d’interaction.</p>
+
+<h3 id="statistiques">Statistiques</h3>
+<p>La classe <em>Delaunay</em> possède deux attributs de type <em>Stats</em> destinés à stocker les résultats statistiques : <em>heartStats</em> et <em>rimStats</em>.
+Une énumération relativement détaillée de ces statistiques est faite dans <em>stats.h</em>.</p>
+
+<h3 id="graphes">Graphes</h3>
+<p>La classe <em>Delaunay</em> possède enfin quatre attributs de type <em>Graph</em>. la description de ces différents graphes est faite dans <em>delaunay.h</em>.</p>
+
+<h2 id="les-grilles-de-distance">Les grilles de distance</h2>
+<h3 id="classes-2">Classes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Dossier</th>
+      <th style="text-align: center">Fichier</th>
+      <th style="text-align: center">Classes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">params/grid/</td>
+      <td style="text-align: center">grid.h</td>
+      <td style="text-align: center">Grid</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="description-1">Description</h3>
+<p>Une majorité (environ 75%) du temps de calcul de la version originale était utilisée pour la dissolution. Pour chaque atome X de chaque copie
+du solvant, on devait évaluer la distance entre X est tous les atomes du soluté. Ça fait un algorithme en <em>O(N×M)</em> avec <em>N</em>
+le nombre total d’atomes des copies du solvant et <em>M</em> le nombre d’atomes du soluté.</p>
+
+<p>Une solution plus efficace pour vérifier si deux jeux de points sont à une distance strictement inférieure à <em>D</em> consiste à tracer une grille de cellules cubiques de côté <em>D</em>.
+Du coup, plus besoin de comparer à <em>tous</em> les atomes, il suffit de comparer aux atomes de la même cellule et des cellules voisines.
+On peut aussi être un peu plus général et tracer une grille de cellules cubiques de côté <em>D/n</em> et ne comparer qu’aux cellules à distance strictement inférieure à <em>n</em>
+(on parle ici de la distance cellulaire, ou deux cellules adjacentes sont à distance 1).</p>
+
+<p>Ça permet d’obtenir un algorithme en <em>O(N×log(M))</em>. Plus de précisions là : https://en.wikipedia.org/wiki/Cell_lists.</p>
+
+<p>La classe <em>Grid</em> met en place cette machinerie, et j’ai fait en sorte qu’on puisse régler le paramètre <em>n</em> dont je parle précédemment.
+Dans notre cas, il faut vérifier si deux atomes ne sont pas trop proches (distance de clash),
+et si deux atomes ne sont pas trop éloignés (distance d’interaction). Il y a donc deux grilles.</p>
+
+<p>Le paramètre <em>n</em> est à 1 pour la grille de clash et à 2 pour la grille d’interaction. Ça donne des résultats corrects.</p>
+
+<h1 id="recherche-des-meilleurs-modèles">Recherche des meilleurs modèles</h1>
+<h2 id="équivalence-script--méthodes">Équivalence script / méthodes</h2>
+<p>S’ils manquent des scripts, c’est parce qu’ils sont contenus dans d’autres scripts qui sont présents dans cette table.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>make_mac_classic_30_30.pl</td>
+      <td>Hex::writeMac</td>
+    </tr>
+    <tr>
+      <td>hex</td>
+      <td>Hex::run</td>
+    </tr>
+    <tr>
+      <td>bout de runDock_30_30.pl + analyse_decoys.pl</td>
+      <td>Hex::selectModels</td>
+    </tr>
+    <tr>
+      <td>dock_new</td>
+      <td>Process::gravitateMolecules + Process::computeParams</td>
+    </tr>
+    <tr>
+      <td>missingValue2MedOrMoy-globalTarget.pl</td>
+      <td>Process::computeScorings / Scorings::normalize / Percents::normalize / Percents::normalizeSingle</td>
+    </tr>
+    <tr>
+      <td>predict-NL.pl</td>
+      <td>Process::computeScorings / Scorings::score / Scoring::addScore / Percents::score</td>
+    </tr>
+    <tr>
+      <td>aggregatVoteScoreTest.pl</td>
+      <td>Process::computeScorings / Scorings::score (calcul de <em>rankSum</em>)</td>
+    </tr>
+    <tr>
+      <td>identify_new_all.pl</td>
+      <td>std::sort</td>
+    </tr>
+    <tr>
+      <td>boltzman.pl</td>
+      <td>Process::computeScorings / Scorings::boltzman</td>
+    </tr>
+    <tr>
+      <td>compare_sum.pl</td>
+      <td>std::sort</td>
+    </tr>
+    <tr>
+      <td>rmsd_list</td>
+      <td>Process::computeInteractions / Interactions::compute / Interactions::computeRMSDs</td>
+    </tr>
+    <tr>
+      <td>runFnat_CONS.pl</td>
+      <td>Process::computeInteractions / Interactions::compute / Interactions::computeFnats</td>
+    </tr>
+    <tr>
+      <td>runFriendsNoElim_cons.pl</td>
+      <td>Process::computeScorings / Scorings::cfScore / Scorings::cScore</td>
+    </tr>
+    <tr>
+      <td>runScoreInt_CONS.pl</td>
+      <td>Process::computeScorings / Scorings::cfScore / Scorings::fScore</td>
+    </tr>
+    <tr>
+      <td>runIRMSD_CONS.pl</td>
+      <td>Process::computeInteractions / Interactions::compute / Interactions::computeIRMSDs</td>
+    </tr>
+    <tr>
+      <td>runRanksCONS.pl</td>
+      <td>Process::computeInteractions / Scorings::rankings</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="organisation-des-classes">Organisation des classes</h2>
+<p>D’une manière générale, j’ai essayé de garder tout ce concernait les calculs des paramètres dans le dossier <em>params/</em>, même si la séparation n’est pas parfaite.
+La partie sur la recherche des meilleurs modèles est essentiellement divisé en deux : une partie interactions, qui permet les calculs de RMSDs,
+et une partie score.</p>
+
+<h3 id="partie-interactions">Partie interactions</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Dossier</th>
+      <th style="text-align: center">Fichier</th>
+      <th style="text-align: center">Classes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">interactions/</td>
+      <td style="text-align: center">interactions.h</td>
+      <td style="text-align: center">Interactions</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">interactions/</td>
+      <td style="text-align: center">inter_molecules.h</td>
+      <td style="text-align: center">ChainCouplings, InterMolecule</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>La classe <em>InterMolecule</em> contient une molecule et les résultats de ses interactions avec les autres molécules. La classe <em>Interactions</em> organise
+les calculs de ces interactions, et remplit les membres des objets de type <em>InterMolecule</em>.</p>
+
+<h3 id="partie-score">Partie score</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Dossier</th>
+      <th style="text-align: center">Fichier</th>
+      <th style="text-align: center">Classes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">scorings/</td>
+      <td style="text-align: center">scoring.h</td>
+      <td style="text-align: center">Rankings, Scoring (pas pluriel)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">scorings/</td>
+      <td style="text-align: center">scorings.h</td>
+      <td style="text-align: center">ResidueScorings, Scorings (pluriel)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>La classe <em>Scoring</em> (pas pluriel) contient un membre <em>smp</em> qui pointe vers la molecule auquel il se réfère. On ne peut pas vraiment
+hériter de <em>StatsMolecule</em>, parce que plusieurs <em>Scoring</em> (au moins générique / spécifique) doivent se référer à la même molécule.
+On y gagne aussi sur la possibilité de déclarer le pointeur <em>const</em> : la molécule n’est pas impacté par le calcul de ses scores.
+Les autres membres de la classe sont un objet de type <em>Percent</em> contenant les paramètres influencés par les références,
+les différents scores associés à la molécule (consensus, C-score…), ainsi que les rangs associés aux différents scores.</p>
+
+<p>Enfin la classe contient plusieurs méthodes statiques permettant d’ordonner les <em>Scoring</em> suivant les différents scores.</p>
+
+<p>La classe <em>Scorings</em> (pluriel) est organisée de manière à pouvoir ordonner les molécules en fonction des différents scores (dans le but de calculer les rangs)
+sans copier d’objet et en utilisant <em>std::sort</em>. Pour ce faire, elle contient un membre <em>scorings</em> de type <em>vector&lt;Scoring&gt;</em>,
+dont l’ordre ne change jamais, et un membre <em>sps</em> (Scoring PointerS) de type <em>vector&lt;Scoring*&gt;</em>, dont les éléments pointent
+sur les éléments de <em>scorings</em> et qui sert à être réordonner.</p>
+
+<h2 id="processus-directeur">Processus directeur</h2>
+<p>Il reste quelques classes dont le but est d’organiser et lancer les calculs dans le bon ordre.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Dossier</th>
+      <th style="text-align: center">Fichier</th>
+      <th style="text-align: center">Classes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">process/</td>
+      <td style="text-align: center">bare_pdb.h</td>
+      <td style="text-align: center">BarePdb</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">process/</td>
+      <td style="text-align: center">hex.h</td>
+      <td style="text-align: center">Hex</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">process/</td>
+      <td style="text-align: center">process.h</td>
+      <td style="text-align: center">Process</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em>BarePdb</em> sert à faire la transition entre <em>Hex</em> et le reste du programme, et contient simplement une origine (un numéro de modèle) et les lignes d’atomes au format <em>pdb</em>.
+<em>Hex</em> est une interface qui permet de préparer et d’appeler <em>hex</em>.
+<em>Process</em> est la classe utilisée par la fonction <em>main</em> pour lancer les différents calculs.</p>
+
+
+		</div>
+	</body>
+</html>

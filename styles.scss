@@ -1,0 +1,54 @@
+---
+---
+
+body {
+	background: #ccddff;
+}
+
+div.sidebar {
+	margin-top: 2%;
+	margin-left: 10%;
+	position: absolute;
+	width: 15%;
+}
+
+div.main {
+	margin-right: 10%;
+	margin-left: 25%;
+	margin-top: 2%;
+	position: absolute;
+	width: 65%;
+}
+
+.final {
+	color: #008800;
+}
+
+.step {
+	color: #cc0000;
+}
+
+.title {
+	font-size: 36px;
+	font-weight: bold;
+	text-align: center;
+}
+
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+table {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+th, td {
+	padding-left: 12px;
+	padding-right: 12px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	text-align: center;
+}
+
