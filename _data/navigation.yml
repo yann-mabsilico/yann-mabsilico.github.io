@@ -1,5 +1,5 @@
 Home: /index.html
 
-howtos:
-  Docker: /content/docker.md
+content:
+  Docker: /content/docker.html
 
