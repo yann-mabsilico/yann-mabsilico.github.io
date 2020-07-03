@@ -1,4 +1,5 @@
-# pocdoc
+# A bunch of guides.
+If you want the local version, follow these steps.
 
 - Install Jekyll.
 - At the base of the repository:
