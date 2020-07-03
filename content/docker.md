@@ -31,7 +31,7 @@ both `REPOSITORY` and `TAG` will default to `<none>`.
 
 ### Container names
 Containers don't have tags, they have names. Upon being run for the first time, a name for the container is generated automatically
-in an ubuntesque way. The `NAMES` (plural, does it mean you can assign multiple names to a container?) column is obviously the last column of `docker ps -a`.
+in an ubuntuesque way. The `NAMES` (plural, does it mean you can assign multiple names to a container?) column is obviously the last column of `docker ps -a`.
 
 ## Build an image and run it with tags
 
