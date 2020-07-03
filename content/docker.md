@@ -19,7 +19,7 @@ Docker - Cheat sheet
 	(Did you guess `docker containers`?)
 
 ## Interlude
-A quick section to highlight the consistency of docker command line interface.
+A quick section to highlight the consistency of docker's command line interface.
 
 ### Image tags
 The first two columns of `docker images` are `REPOSITORY` and `TAG`. In the docker documentation and in this document, the `tag` of an image
