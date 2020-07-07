@@ -116,7 +116,7 @@ Nothing seems to happen, but a `docker ps -a` will show that the container is no
 
 	docker exec -ti container_id /bin/bash
 
-Note that exiting the console in this case **will not stop** the container. We'll have to that manually:
+Note that exiting the console in this case **will not stop** the container. We'll have to do that manually:
 
 	docker stop container_id
 
