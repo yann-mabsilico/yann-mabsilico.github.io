@@ -47,8 +47,11 @@ As an example, if only one container id starts with *2*, then we can simply use 
 As mentioned above, `production` will appear in the `REPOSITORY` column of `docker images` while `latest` appears in the `TAG` column.
 We can specify both `REPOSITORY` and `TAG` with `repository:tag`.
 
-Note. Each call to `docker run -it production` will spawn a new container. So in a local setting (as opposed to say, azure)
-this should only be done once, after which we can simply reuse the container (see [Restart a container](#restart-a-container)).
+Notes.
+
+- If an image `X` with the `production` tag existed before the `build` command, the tag of image `X` will be removed and default back to `<none>:<none>`.
+- Each call to `docker run -it production` will spawn a new container. So in a local setting (as opposed to say, azure)
+	this should only be done once, after which we can simply reuse the container (see [Restart a container](#restart-a-container)).
 
 ## Remove image
 Exited containers still use the image because reason. If you try to remove an image that's still in use with:
