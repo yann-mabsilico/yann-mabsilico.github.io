@@ -33,6 +33,12 @@ both `REPOSITORY` and `TAG` will default to `<none>`.
 Containers don't have tags, they have names. Upon being run for the first time, a name for the container is generated automatically
 in an ubuntuesque way. The `NAMES` (plural, does it mean you can assign multiple names to a container?) column is obviously the last column of `docker ps -a`.
 
+## ID hashes
+The result of listing commands contain ids for both images and containers. These ids are twelve character long hexadecimals.
+When using these ids (in the commands below), you (unless extreme circumstances) don't need to type all twelve characters.
+All you need to type is enough characters (starting from the left) to make it uniquely identifying.
+As an example, if only one container id starts with *2*, then we can simply use *2* instead of the full id to identify this container.
+
 ## Build an image and run it with tags
 
 	docker build . --tag production
