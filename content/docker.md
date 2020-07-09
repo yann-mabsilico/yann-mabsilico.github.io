@@ -40,9 +40,13 @@ All you need to type is enough characters (starting from the left) to make it un
 As an example, if only one container id starts with *2*, then we can simply use *2* instead of the full id to identify this container.
 
 ## Build an image and run it with tags
+A build requires a `Dockerfile`. Refer to the [Dockerfile](#dockerfile) section. If no `Dockerfile` is specified,
+the `build` command will look in the current working directory. One may specify a different location for the `Dockerfile` with the `-f` option.
 
 	docker build . --tag production
 	docker run -it production
+
+The dot is the context directory (and could obviously be any directory). See section [Understanding the context](#understanding-the-context) for an explanation.
 
 As mentioned above, `production` will appear in the `REPOSITORY` column of `docker images` while `latest` appears in the `TAG` column.
 We can specify both `REPOSITORY` and `TAG` with `repository:tag`.
@@ -128,4 +132,58 @@ Nothing seems to happen, but a `docker ps -a` will show that the container is no
 Note that exiting the console in this case **will not stop** the container. We'll have to do that manually:
 
 	docker stop container_id
+
+## Copy files from the host to the container
+
+	docker cp /local/path container_id:/container/path
+
+# Dockerfile
+
+Let's use this example script to explain the format and keywords.
+
+	from debian:stable
+
+	workdir /root/
+	copy .vimrc /root/
+	add mabtope.tar .
+
+	run apt-get update
+	run apt-get install --yes python3
+	run python3 mabtope/_docker_/install.py
+
+## `from`
+The `from` keyword takes a tag as parameter. It is meant to say: take the `from` image as the base of the image we want to build.
+The tag is first searched locally, that is, you can build an image starting from an image you already created.
+If the local search fails, images are pulled from the web (somewhere). In this case, `debian:stable` exists on the web and
+is the image of a (very) minimal debian stable image.
+
+## `workdir`
+The `workdir` keyword has two functions:
+
+- subsequent commands of the `Dockerfile` will be executed from this directory,
+- any terminal opened on the containers based on this image will start in this directory.
+
+## Understanding the context
+The context is the directory given as a parameter of the `docker build` command. When `build` is called, everything within the context,
+that is, the full directory, is copied into a temporary folder that will be used by `docker` to copy files over to the image.
+That copy is super important, because it means that `docker` **only knows what is inside the context**. Most notably, if `./`
+is given as context, then docker doesn't know what `../` is.
+
+In case anyone is wondering, the path to the `Dockerfile` has absolutely no influence on the context.
+
+## `copy` and `add`
+Both keywords take two parameters:
+
+- a *relative* path, with the context as the base, that is within the `context` (again, no path outside of the context is allowed),
+- a path in the image.
+
+The difference between the two keywords is that the first parameter of `add` is an archive (I know `tar` and `tar.gz` work, the others probably also do)
+that will automatically be extracted inside the image.
+
+## `run`
+Runs any command within the image.
+
+## Note
+The above `Dockerfile` is used for `mabtope`. It is essentially the minimal file that allows calling a proper installation script (`install.py`).
+I'd say it's a good strategy.
 
