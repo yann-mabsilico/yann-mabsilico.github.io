@@ -137,11 +137,17 @@ Note that exiting the console in this case **will not stop** the container. We'l
 	docker stop container_id
 
 # Host / container interactions
-It is possible to copy files from the host to the container (not the other way around) with:
+From the host, it is possible to copy files from the host to the container with:
 
 	docker cp /local/path container_id:/container/path
 
-This is fine for static files that won't change (like say, your `.bashrc`). However, if you want to work/develop inside the docker container,
+or from the container to the host with:
+
+	docker cp container_id:/container/path /local/path
+
+There is no such commands from inside the container, but you can use volumes (see next paragraph).
+
+Copying is fine for static files that won't change (like say, your `.bashrc`). However, if you want to work/develop inside the docker container,
 do not do this. You'll end up with to different copies, one on your host, one in the container, and wonder if they are different and
 which one is the right one,
 
