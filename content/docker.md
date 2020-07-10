@@ -9,6 +9,10 @@ Docker - Cheat sheet
 * TOC
 {: toc}
 
+# Foreword
+Here is a relevant link explaining non-root user issues with `docker`: <https://www.projectatomic.io/blog/2015/08/why-we-dont-let-non-root-users-run-docker-in-centos-fedora-or-rhel/>.
+Let's just say (for now?) all commands must be run as root.
+
 # Commands
 ## Listing
 - List images:
