@@ -6,6 +6,9 @@ title: docker
 {: .title}
 Docker - Cheat sheet
 
+* TOC
+{: toc}
+
 # Commands
 ## Listing
 - List images:
@@ -133,9 +136,21 @@ Note that exiting the console in this case **will not stop** the container. We'l
 
 	docker stop container_id
 
-## Copy files from the host to the container
+# Host / container interactions
+It is possible to copy files from the host to the container (not the other way around) with:
 
 	docker cp /local/path container_id:/container/path
+
+This is fine for static files that won't change (like say, your `.bashrc`). However, if you want to work/develop inside the docker container,
+do not do this. You'll end up with to different copies, one on your host, one in the container, and wonder if they are different and
+which one is the right one,
+
+Instead, use volumes:
+
+	docker run -v /host/path:/container/path -it (image_id|tag)
+
+This will essentially mount `/host/path` inside the container at `/container/path`, and your folder will be synced!
+It should be noted that (apparently) this can only be done at container creation. I'm not sure if volumes can be added to an already existing container.
 
 # Dockerfile
 
