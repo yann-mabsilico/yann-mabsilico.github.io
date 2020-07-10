@@ -158,6 +158,22 @@ Instead, use volumes:
 This will essentially mount `/host/path` inside the container at `/container/path`, and your folder will be synced!
 It should be noted that (apparently) this can only be done at container creation. I'm not sure if volumes can be added to an already existing container.
 
+**File owner issues.** Say the user on your host is named `stephanie` and has `uid` 28. Any file you create on the volume from the host
+will have `28:28` as owner, but any file you create on the volume from the container will have whatever user you're using inside
+as owner (I was still using the `root` user so it was `root:root` for me). Syncing the users appear to be working.
+
+Start your container, create the user, commit the changes, spawn a container from the new image with correct volumes.
+
+	host $ docker start container_id
+	host $ docker exec -it container_id /bin/bash
+
+	container $ useradd --create-home --shell /bin/bash --uid 28 stephanie
+	container $ exit
+
+	host $ docker stop container_id
+	host $ docker commit container_id tag
+	host $ docker run -v /home/stephanie/host_synced_folder:/home/stephanie/container_synced_folder -it tag
+
 # Dockerfile
 
 Let's use this example script to explain the format and keywords.
