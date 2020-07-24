@@ -1,10 +1,52 @@
-# Azure CLI
-# Peupler un registry (depuis sa machine)
-Source : [https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli)
+---
+layout: default
+title: azure
+---
 
-- Log in to azure. The operation is *environment-specific*, meaning terminal/user, and requires `root` (because of `docker`) :
+{: .title}
+Azure
+
+* TOC
+{: toc}
+
+# Je m'ai planté
+Et j'ai créé des `user-level` credentials, qu'apparement on ne peut pas virer. Du coup j'ai généré un username et un mot de passe à coup de
+
+	dd if=/dev/random bs=128 count=1 | md5sum
+
+Faire
+
+	az webapp development user show
+
+montrera l'utilisateur, et on peut reset ça avec
+
+	az webapp development user set --user-name xxx
+
+# POC idea
+
+- Create an input and an output storage.
+- Add an azure function that triggers on input storage change. The trigger spawns a container (inside or outside a pool)
+	and gives it the name of the file deposited in the storage. Then the container retrieves the file and runs something
+	(`mabtope` at some point) on said file.
+- Add some code to mabtope to send the result file to the output storage (same base name as the input file),
+	and see how we do error handling (maybe a third storage?).
+- Add an azure function that triggers on the output storage to give the results to WHOEVER.
+
+# CLI
+Before everything, log in to `Azure`. The operation is *environment-specific*, meaning terminal/user, and requires `root` (because of `docker`) :
 
 		az login -u azure_login
+
+And set the correct subscription:
+
+		az account set --subscription "Subscription Name"
+
+These commands can get long. Apparently, you can write a json file and give it to (all?) commands with the `--json-file` option.
+
+[Random cheatsheet.](https://github.com/ferhaty/azure-cli-cheatsheet)
+
+## Peupler un registry (depuis sa machine)
+Source : [https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli)
 
 - Log to the registry:
 
@@ -22,11 +64,7 @@ Source : [https://docs.microsoft.com/en-us/azure/container-registry/container-re
 
 		az acr repository delete --name registry_name --image /path/to/image:tag
 
-# Creating a container
-
-- Set the correct subscription:
-
-		az account set --subscription "Subscription Name"
+## Creating a container
 
 - Manage resource groups:
 
@@ -46,4 +84,96 @@ Source : [https://docs.microsoft.com/en-us/azure/container-registry/container-re
 		az container start --resource-group cli-containers --name cli-container
 		az container stop --resource-group cli-containers --name cli-container
 		az container delete --resource-group cli-containers --name cli-container
+
+## Batch
+https://docs.microsoft.com/en-us/azure/batch/batch-cli-get-started
+https://docs.microsoft.com/en-us/azure/batch/scripts/batch-cli-sample-manage-linux-pool
+https://docs.microsoft.com/en-us/azure/batch/batch-docker-container-workloads
+
+You create a batch account, inside which there is a (batch) pool of VMs (not containers). These VMs should (for our purposes) be
+able to run containers, which essentially reduces the choice of the VM image (assuming we go with azure predefined ones) to
+
+- centos-container
+- ubuntu-server-container
+- centos-container-rdma
+- ubuntu-server-container-rdma
+
+`RDMA` means *Remote direct memory access* and is apparently used to have have a memory that is common to multiple nodes. Could be useful.
+After that, running a job means deploying a container on the VMs of the pool.
+
+- New resource group:
+
+		az group list
+		az group create --name batch-group --location francecentral
+
+- New batch account (no dashes allowed in the name):
+
+		az batch account create --subscription "Sub Name" --resource-group batch-group --name batchaccount --location francecentral
+
+	There is also an option for auto-storage. I'm not sure what it does.
+
+- Login to the new batch account
+
+		az batch account login --subscription "Sub Name" --resource-group batch-test --name batchaccount
+
+- New pool:
+
+		az batch pool create --account-name batchaccount --id batch-pool --image "microsoft-azure-batch:centos-container:7-7:latest"\
+			--vm-size "Standard_A1" --target-dedicated-nodes 2 --node-agent-sku-id "batch.node.centos 7"
+
+	I don't know how to list the images that offer container deployment (the ones I listed above are the Microsoft prepared ones).
+	Once you have your image name (`centos-container`), getting a compatible `--image` field is done with:
+
+		az vm image list --all --offer centos-container
+
+	And OBVIOUSLY, you take the `urn` value. No idea how to get the proper `--node-agent-sku-id`. Got this one from
+	https://docs.microsoft.com/en-us/azure/batch/batch-linux-nodes
+
+**--- BOOM ---**
+
+Found a [post from 2018](https://stackoverflow.com/questions/53677297/container-task-settings-for-azure-batch-task-using-cli)
+saying it is impossible to create a container-task from the CLI, but we could use some `json`. While not saying this explicitly, the
+[documentation](https://docs.microsoft.com/en-us/azure/batch/batch-docker-container-workloads)
+doesn't give any example of how to do this, instead resorting to `python` or `C#` scripts. So we move on to...
+
+# Python
+Apparently, you need to register an azure application in order to connect. So I did that.
+See [here for explanations](https://www.inkoop.io/blog/how-to-get-azure-api-credentials/).
+
+Also, you need to give your application the proper permissions.
+
+Jobs and tasks IDs are unique over all pools.
+
+Instruction to pull the container image from your azure registry: [here](https://www.muspells.net/blog/2018/11/azure-batch-task-in-containers/)
+
+# Function apps
+https://github.com/Azure/azure-functions-templates
+Run-From-Zip is set to a remote URL using WEBSITE_RUN_FROM_PACKAGE or WEBSITE_USE_ZIP app setting. Deployment is not supported in this configuration.
+
+## Creating the function
+Azure -> Function App -> Add
+
+When it's done, click on your newly created function and go to Settings -> Configuration, and delete `WEBSITE_RUN_FROM_PACKAGE`.
+
+## Uploading files
+### From a github action
+See the `azure-poc-deploy` repository for an example of the organisation of files and for the github action that auto-deploys.
+Note that the `requirements.txt` has to be at the root of the folder, and contains the package you want to install with `pip`.
+An empty `requirements.txt` is fine, but even then the file has to be present.
+
+For the use case of the repository, we chose an http trigger. The `hello` folder is actually a `python` module, and this is this module
+that is called by the trigger, so it's important for the `__init__.py` and related files to be inside a directory.
+Let's say we named it `directory_name`.
+
+Once this is done, and if no `route` option is given in the `function.json` file, the function can be triggered by going to
+`http://app_name.azurewebsites.net/api/directory_name`
+
+See again the repository for an example of `route`.
+
+### From the cli
+It is very possible that the command
+
+	az functionapp deployment source config-zip --subscription "Microsoft Azure Sponsorship" --resource-group batch-group --name mabstriggers --src app.zip
+
+works **after** the `WEBSITE_RUN_FROM_PACKAGE` thingy is deleted. But I only tried it before! And it didn't work.
 
