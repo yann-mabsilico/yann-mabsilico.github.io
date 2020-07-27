@@ -45,7 +45,7 @@ These commands can get long. Apparently, you can write a json file and give it t
 
 [Random cheatsheet.](https://github.com/ferhaty/azure-cli-cheatsheet)
 
-## Peupler un registry (depuis sa machine)
+## Populate a registry
 Source : [https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli)
 
 - Log to the registry:
@@ -98,7 +98,7 @@ able to run containers, which essentially reduces the choice of the VM image (as
 - centos-container-rdma
 - ubuntu-server-container-rdma
 
-`RDMA` means *Remote direct memory access* and is apparently used to have have a memory that is common to multiple nodes. Could be useful.
+`RDMA` means *Remote direct memory access* and is apparently used to have a memory that is common to multiple nodes. Could be useful.
 After that, running a job means deploying a container on the VMs of the pool.
 
 - New resource group:
@@ -145,35 +145,4 @@ Also, you need to give your application the proper permissions.
 Jobs and tasks IDs are unique over all pools.
 
 Instruction to pull the container image from your azure registry: [here](https://www.muspells.net/blog/2018/11/azure-batch-task-in-containers/)
-
-# Function apps
-https://github.com/Azure/azure-functions-templates
-Run-From-Zip is set to a remote URL using WEBSITE_RUN_FROM_PACKAGE or WEBSITE_USE_ZIP app setting. Deployment is not supported in this configuration.
-
-## Creating the function
-Azure -> Function App -> Add
-
-When it's done, click on your newly created function and go to Settings -> Configuration, and delete `WEBSITE_RUN_FROM_PACKAGE`.
-
-## Uploading files
-### From a github action
-See the `azure-poc-deploy` repository for an example of the organisation of files and for the github action that auto-deploys.
-Note that the `requirements.txt` has to be at the root of the folder, and contains the package you want to install with `pip`.
-An empty `requirements.txt` is fine, but even then the file has to be present.
-
-For the use case of the repository, we chose an http trigger. The `hello` folder is actually a `python` module, and this is this module
-that is called by the trigger, so it's important for the `__init__.py` and related files to be inside a directory.
-Let's say we named it `directory_name`.
-
-Once this is done, and if no `route` option is given in the `function.json` file, the function can be triggered by going to
-`http://app_name.azurewebsites.net/api/directory_name`
-
-See again the repository for an example of `route`.
-
-### From the cli
-It is very possible that the command
-
-	az functionapp deployment source config-zip --subscription "Microsoft Azure Sponsorship" --resource-group batch-group --name mabstriggers --src app.zip
-
-works **after** the `WEBSITE_RUN_FROM_PACKAGE` thingy is deleted. But I only tried it before! And it didn't work.
 

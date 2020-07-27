@@ -1,6 +1,10 @@
 Home: /index.html
 
 content:
-  Docker: /content/docker.html
-  Azure: /content/azure.html
+  Docker:
+    Cheat Sheet: /content/docker/cheat_sheet.html
+  Azure:
+    CLI: /content/azure/cli.html
+    Function: /content/azure/function.html
+    Storage: /content/azure/storage.html
 

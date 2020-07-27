@@ -26,10 +26,13 @@
 	<body>
 		<div class="sidebar">
 			<h3> <a href="{{ site.data.navigation.Home }}">Home</a> </h3>
-			{% for part in site.data.navigation.content %}
-				<li><a href="{{ part[1] }}"{% if page.url == part[1] %}style="color: red;"{% endif %}>
-					{{ part[0] }}
-				</a><br></li>
+			{% for section in site.data.navigation.content %}
+				<h3> {{ section[0] }} </h3>
+				{% for page in section[1] %}
+					<li><a href="{{ page[1] }}"{% if page.url == page[1] %}style="color: red;"{% endif %}>
+						{{ page[0] }}
+					</a><br></li>
+				{% endfor %}
 			{% endfor %}
 		</div>
 
