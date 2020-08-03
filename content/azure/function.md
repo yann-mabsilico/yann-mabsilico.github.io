@@ -20,6 +20,9 @@ When it's done, click on your newly created function and go to Settings -> Confi
 
 ## Uploading files
 ### From a github action
+Go to the `settings` page of the repository, click on `Secrets`, call it `AZURE_FUNCTIONAPP_PUBLISH_PROFILE` and copy the publishing
+profile for your app (`Get publish profile` on the azure page).
+
 See the `azure-poc-deploy` repository for an example of the organisation of files and for the github action that auto-deploys.
 Note that the `requirements.txt` has to be at the root of the folder, and contains the package you want to install with `pip`.
 An empty `requirements.txt` is fine, but even then the file has to be present.

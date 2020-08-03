@@ -7,4 +7,7 @@ content:
     CLI: /content/azure/cli.html
     Function: /content/azure/function.html
     Storage: /content/azure/storage.html
+    Storage Trigger Rundown: /content/azure/storage-trigger-rundown.html
+  DeepPrime2Sec:
+    HOWTO: /content/dp2s/howto.html
 
