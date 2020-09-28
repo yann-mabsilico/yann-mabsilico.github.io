@@ -11,5 +11,5 @@ content:
   One-offs:
     DeepPrime2Sec: /content/one-offs/howto.html
     Python Managing Tools: /content/one-offs/python_managing_tools.html
-	SSH Github 2FA: /content/one-offs/ssh_github_2fa.html
+    SSH Github 2FA: /content/one-offs/ssh_github_2fa.html
 
