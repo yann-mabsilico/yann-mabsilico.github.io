@@ -13,6 +13,13 @@ DP2S - Installation
 
     apt-get install libfreetype6-dev gfortran libffi-dev
 
+## Cuda
+Je ne sais pas si `nvidia-kernel-source` vient avec `nvidia-driver`:
+
+	apt-get install nvidia-driver nvidia-kernel-source
+
+Après ça, download `cuda-9.0` sur le site de nvidia, lance et installe `cuda` seulement, pas les drivers.
+
 # Non-root
 Installer `anaconda3` ou `miniconda3`.
 
@@ -34,4 +41,17 @@ Virer les lignes `pygpu, tensorflow, tensorflow-gpu` de `installations/requireme
 	python deepprime2sec.py --config sample_configs/model_a.yaml
 
 ET BOOM, `Killed` parce qu'il prend toute ma mémoire.
+
+Le fichier de 12Go est au format numpy. Tu peux l'ouvrir sans le charger complètement avec :
+
+	kikoo = numpy.load(filepath, mmap_mode='r')
+
+puis le couper :
+
+	numpy.save(filepath, kikoo[:1000])
+
+Après ça, dp2s se lance mais ne trouve pas le GPU. Va dans `utility/training.py` et commente la ligne `CUDA_VISIBLE_DEVICES`.
+Après ça :
+
+	2020-08-06 17:56:56.432415: E tensorflow/stream_executor/cuda/cuda_dnn.cc:352] Could not create cudnn handle: CUDNN_STATUS_INTERNAL_ERROR
 

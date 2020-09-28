@@ -85,6 +85,16 @@ Source : [https://docs.microsoft.com/en-us/azure/container-registry/container-re
 		az container stop --resource-group cli-containers --name cli-container
 		az container delete --resource-group cli-containers --name cli-container
 
+When running container groups without long-running processes you may see repeated exits and restarts.
+To resolve this problem, include a start command like the following with your container group deployment to keep the container running.
+az container create --resource-group cli-containers --name cli-container --image registry_name.azurecr.io/samples/nginx --cpu 1 --memory 1 --ip-address Public --command-line 'tail -f /dev/null'
+
+## Connecting to a running container
+
+	az container exec --resource-group cli-containers --name cli-container --exec-command '/bin/bash'
+
+Got a certificate error with this ^
+
 ## Batch
 https://docs.microsoft.com/en-us/azure/batch/batch-cli-get-started
 https://docs.microsoft.com/en-us/azure/batch/scripts/batch-cli-sample-manage-linux-pool

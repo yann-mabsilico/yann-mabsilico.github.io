@@ -8,6 +8,8 @@ content:
     Function: /content/azure/function.html
     Storage: /content/azure/storage.html
     Storage Trigger Rundown: /content/azure/storage-trigger-rundown.html
-  DeepPrime2Sec:
-    HOWTO: /content/dp2s/howto.html
+  One-offs:
+    DeepPrime2Sec: /content/one-offs/howto.html
+    Python Managing Tools: /content/one-offs/python_managing_tools.html
+	SSH Github 2FA: /content/one-offs/ssh_github_2fa.html
 
