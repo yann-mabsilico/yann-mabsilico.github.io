@@ -60,6 +60,12 @@ The dot is the context directory (and could obviously be any directory). See sec
 As mentioned above, `production` will appear in the `REPOSITORY` column of `docker images` while `latest` appears in the `TAG` column.
 We can specify both `REPOSITORY` and `TAG` with `repository:tag`.
 
+We can also create a container without entering it:
+
+	docker create -it production
+
+After that, see [Restart a container](#restart-a-container).
+
 Notes.
 
 - If an image `X` with the `production` tag existed before the `build` command, the tag of image `X` will be removed and default back to `<none>:<none>`.
@@ -137,6 +143,10 @@ It can be started again with
 Nothing seems to happen, but a `docker ps -a` will show that the container is now running. We can reenter it with
 
 	docker exec -ti container_id /bin/bash
+
+If `/bin/bash` is the default command, we can also prefer:
+
+	docker attach container_id
 
 Note that exiting the console in this case **will not stop** the container. We'll have to do that manually:
 
