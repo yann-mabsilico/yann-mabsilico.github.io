@@ -3,6 +3,7 @@ Home: /index.html
 content:
   Docker:
     Cheat Sheet: /content/docker/cheat_sheet.html
+    X Applications: /content/docker/xapp.html
   Azure:
     CLI: /content/azure/cli.html
     Function: /content/azure/function.html
