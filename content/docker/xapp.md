@@ -67,8 +67,8 @@ Move to the shared directory on the host and copy the `Dockerfile` there.
 
 	docker build . --tag xapps
 	docker run -it -e DISPLAY=$DISPLAY --net=host -v /host/path:/home/stephanie/share xapps
-	# Ou alors !
-	docker run -it -e DISPLAY=$DISPLAY --net=host -v /tmp/.X11-unix/:/tmp/.X11-unix/ -v /host/path:/home/stephanie/share xapps
+	# Or!
+	docker run -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix/ -v /host/path:/home/stephanie/share xapps
 
 ## Windows
 
